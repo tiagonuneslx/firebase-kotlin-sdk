@@ -43,11 +43,7 @@ android {
 
 kotlin {
     js {
-        val main by compilations.getting {
-            kotlinOptions {
-                moduleKind = "umd"
-            }
-        }
+        useCommonJs()
         nodejs()
         browser()
     }
@@ -91,6 +87,7 @@ kotlin {
                 api("com.google.firebase:firebase-common:19.5.0")
             }
         }
+
         val jvmMain by getting {
             kotlin.srcDir("src/androidMain/kotlin")
         }

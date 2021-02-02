@@ -4,7 +4,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    kotlin("multiplatform") version "1.4.21" apply false
+    kotlin("multiplatform") version "1.4.30-RC" apply false
     id("de.undercouch.download").version("4.1.1")
     id("base")
 }
@@ -205,23 +205,20 @@ subprojects {
 
         dependencies {
             "jvmMainImplementation"(kotlin("stdlib-jdk8"))
-            "jvmMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
-            "jvmMainApi"("dev.gitlive:firebase-java-sdk:0.5.2")
-            "jvmMainApi"("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.9") {
+//              "jvmMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+            "jvmMainApi"("dev.gitlive:firebase-java-sdk:1.0.0")
+            "jvmMainApi"("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.2") {
                 exclude("com.google.android.gms")
             }
             "commonMainImplementation"(kotlin("stdlib-common"))
             "commonMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
             "jsMainImplementation"(kotlin("stdlib-js"))
-            "jsMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.3.8")
-            "androidMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.8")
-            "androidMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.8")
-            "iosMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.8")
-            "iosMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.3.8")
+//            "jsMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.4.2")
+//            "androidMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2")
             "androidMainImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.2")
             "commonTestImplementation"(kotlin("test-common"))
             "commonTestImplementation"(kotlin("test-annotations-common"))
-            "commonTestImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+//            "commonTestImplementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
             "jsTestImplementation"(kotlin("test-js"))
             "androidAndroidTestImplementation"(kotlin("test-junit"))
             "androidAndroidTestImplementation"("junit:junit:4.13")
