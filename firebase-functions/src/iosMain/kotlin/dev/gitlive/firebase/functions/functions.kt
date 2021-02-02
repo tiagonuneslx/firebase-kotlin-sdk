@@ -25,19 +25,21 @@ actual fun Firebase.functions(app: FirebaseApp) =
     FirebaseFunctions(FIRFunctions.functionsForApp(app.ios))
 
 actual fun Firebase.functions(app: FirebaseApp, region: String) =
-    FirebaseFunctions(FIRFunctions.functionsForApp(app.ios, region))
+    FirebaseFunctions(FIRFunctions.functionsForApp(app.ios, region = region))
 
 actual class FirebaseFunctions internal constructor(val ios: FIRFunctions) {
     actual fun httpsCallable(name: String, timeout: Long?) =
         HttpsCallableReference(ios.HTTPSCallableWithName(name).apply { timeout?.let { setTimeoutInterval(it/1000.0) } })
 
     actual fun useFunctionsEmulator(origin: String) = ios.useFunctionsEmulatorOrigin(origin)
+
+    actual fun useEmulator(host: String, port: Int) = ios.useEmulatorWithHost(host, port.toLong())
 }
 
 actual class HttpsCallableReference internal constructor(val ios: FIRHTTPSCallable) {
     actual suspend operator fun invoke() = HttpsCallableResult(ios.awaitResult { callWithCompletion(it) })
 
-    actual suspend operator fun invoke(data: Any, encodeDefaults: Boolean) =
+    actual suspend inline operator fun <reified T> invoke(data: T, encodeDefaults: Boolean) =
         HttpsCallableResult(ios.awaitResult { callWithObject(encode(data, encodeDefaults), it) })
 
     actual suspend operator fun <T> invoke(strategy: SerializationStrategy<T>, data: T, encodeDefaults: Boolean) =
@@ -55,7 +57,7 @@ actual class HttpsCallableResult constructor(val ios: FIRHTTPSCallableResult) {
 
 actual class FirebaseFunctionsException(message: String): FirebaseException(message)
 
-private suspend inline fun <T> T.await(function: T.(callback: (NSError?) -> Unit) -> Unit) {
+suspend inline fun <T> T.await(function: T.(callback: (NSError?) -> Unit) -> Unit) {
     val job = CompletableDeferred<Unit>()
     function { error ->
         if(error == null) {
@@ -67,7 +69,7 @@ private suspend inline fun <T> T.await(function: T.(callback: (NSError?) -> Unit
     job.await()
 }
 
-private suspend inline fun <T, reified R> T.awaitResult(function: T.(callback: (R?, NSError?) -> Unit) -> Unit): R {
+suspend inline fun <T, reified R> T.awaitResult(function: T.(callback: (R?, NSError?) -> Unit) -> Unit): R {
     val job = CompletableDeferred<R?>()
     function { result, error ->
         if(error == null) {

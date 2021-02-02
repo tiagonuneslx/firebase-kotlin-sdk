@@ -3,7 +3,6 @@
  */
 version = project.property("firebase-app.version") as String
 
-
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
@@ -33,7 +32,7 @@ android {
         }
     }
     packagingOptions {
-        pickFirst("META-INF/kotlinx-serialization-runtime.kotlin_module")
+        pickFirst("META-INF/kotlinx-serialization-core.kotlin_module")
         pickFirst("META-INF/AL2.0")
         pickFirst("META-INF/LGPL2.1")
     }
@@ -52,16 +51,11 @@ kotlin {
         nodejs()
         browser()
     }
-//    js("reactnative") {
-//        val main by compilations.getting {
-//            kotlinOptions {
-//                moduleKind = "commonjs"
-//            }
-//        }
-//    }
+
     android {
         publishLibraryVariants("release", "debug")
     }
+
     jvm {
         val main by compilations.getting {
             kotlinOptions {
@@ -94,7 +88,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                api("com.google.firebase:firebase-common:19.3.1")
+                api("com.google.firebase:firebase-common:19.5.0")
             }
         }
         val jvmMain by getting {

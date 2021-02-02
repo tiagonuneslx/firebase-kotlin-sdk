@@ -4,6 +4,7 @@ plugins {
     id("com.android.library")
     kotlin("multiplatform")
     kotlin("native.cocoapods")
+    kotlin("plugin.serialization") version "1.4.30-RC"
 }
 
 android {
@@ -11,11 +12,16 @@ android {
     defaultConfig {
         minSdkVersion(property("minSdkVersion") as Int)
         targetSdkVersion(property("targetSdkVersion") as Int)
-        setMultiDexEnabled(true)
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
     }
     sourceSets {
         getByName("main") {
             manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        }
+        getByName("androidTest"){
+            java.srcDir(file("src/androidAndroidTest/kotlin"))
+            manifest.srcFile("src/androidAndroidTest/AndroidManifest.xml")
         }
     }
     testOptions {
@@ -24,7 +30,7 @@ android {
         }
     }
     packagingOptions {
-        pickFirst("META-INF/kotlinx-serialization-runtime.kotlin_module")
+        pickFirst("META-INF/kotlinx-serialization-core.kotlin_module")
         pickFirst("META-INF/AL2.0")
         pickFirst("META-INF/LGPL2.1")
         pickFirst("androidsupportmultidexversion.txt")
@@ -71,7 +77,7 @@ kotlin {
         kotlinOptions.freeCompilerArgs += listOf(
             "-Xuse-experimental=kotlin.Experimental",
             "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xuse-experimental=kotlinx.serialization.ImplicitReflectionSerializer"
+            "-Xuse-experimental=kotlinx.serialization.InternalSerializationApi"
         )
     }
 
@@ -84,7 +90,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                api("com.google.firebase:firebase-firestore:21.5.0")
+                api("com.google.firebase:firebase-firestore:22.0.1")
                 implementation("com.android.support:multidex:1.0.3")
             }
         }

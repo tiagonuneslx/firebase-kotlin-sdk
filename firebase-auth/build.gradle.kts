@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2020 GitLive Ltd.  Use of this source code is governed by the Apache 2.0 license.
+ */
 version = project.property("firebase-auth.version") as String
 
 plugins {
@@ -29,7 +32,10 @@ android {
         getByName("main") {
             manifest.srcFile("src/androidMain/AndroidManifest.xml")
         }
-        getByName("androidTest").java.srcDir(file("src/androidAndroidTest/kotlin"))
+        getByName("androidTest"){
+            java.srcDir(file("src/androidAndroidTest/kotlin"))
+            manifest.srcFile("src/androidAndroidTest/AndroidManifest.xml")
+        }
     }
     testOptions {
         unitTests.apply {
@@ -37,7 +43,7 @@ android {
         }
     }
     packagingOptions {
-        pickFirst("META-INF/kotlinx-serialization-runtime.kotlin_module")
+        pickFirst("META-INF/kotlinx-serialization-core.kotlin_module")
         pickFirst("META-INF/AL2.0")
         pickFirst("META-INF/LGPL2.1")
     }
@@ -93,8 +99,7 @@ kotlin {
     tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>> {
         kotlinOptions.freeCompilerArgs += listOf(
             "-Xuse-experimental=kotlin.Experimental",
-            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xuse-experimental=kotlinx.serialization.ImplicitReflectionSerializer"
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"
         )
     }
 
@@ -108,7 +113,7 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                api("com.google.firebase:firebase-auth:19.3.2")
+                api("com.google.firebase:firebase-auth:20.0.2")
             }
         }
         val jvmMain by getting {

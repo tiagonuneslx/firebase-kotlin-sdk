@@ -29,7 +29,7 @@ android {
         }
     }
     packagingOptions {
-        pickFirst("META-INF/kotlinx-serialization-runtime.kotlin_module")
+        pickFirst("META-INF/kotlinx-serialization-core.kotlin_module")
         pickFirst("META-INF/AL2.0")
         pickFirst("META-INF/LGPL2.1")
     }
@@ -75,7 +75,7 @@ kotlin {
         kotlinOptions.freeCompilerArgs += listOf(
             "-Xuse-experimental=kotlin.Experimental",
             "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xuse-experimental=kotlinx.serialization.ImplicitReflectionSerializer"
+            "-Xuse-experimental=kotlinx.serialization.InternalSerializationApi"
         )
     }
 
@@ -88,7 +88,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                api("com.google.firebase:firebase-database:19.3.1")
+                api("com.google.firebase:firebase-database:19.6.0")
             }
         }
         val jvmMain by getting {
