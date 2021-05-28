@@ -1,8 +1,8 @@
 {
-  "name": "@gitlive/firebase-database",
+  "name": "@gitlive/firebase-storage",
   "version": "1.0.0",
   "description": "Wrapper around firebase for usage in Kotlin Multiplatform projects",
-  "main": "firebase-database.js",
+  "main": "firebase-firestore.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

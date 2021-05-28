@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2020 GitLive Ltd.  Use of this source code is governed by the Apache 2.0 license.
- */
-
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 version = project.property("firebase-firestore.version") as String
@@ -65,7 +61,7 @@ kotlin {
         }
 
         compilations.getByName("main") {
-            cinterops.create("FirebaseFirestore") {
+            cinterops.create("FirebaseStorage") {
                 compilerOpts(nativeFrameworkPaths.map { "-F$it" })
                 extraOpts("-verbose")
             }
@@ -125,6 +121,7 @@ kotlin {
         val jsMain by getting
     }
 }
+
 signing {
     val signingKey: String? by project
     val signingPassword: String? by project
