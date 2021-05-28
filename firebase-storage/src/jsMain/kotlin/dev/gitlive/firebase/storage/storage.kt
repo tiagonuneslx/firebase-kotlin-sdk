@@ -1,3 +1,5 @@
+package dev.gitlive.firebase.storage
+
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
 
