@@ -1,36 +1,41 @@
-//import dev.gitlive.firebase.Firebase
-//import dev.gitlive.firebase.FirebaseApp
-//
-///** Returns the [FirebaseStorage] instance of the default [FirebaseApp]. */
-//actual val Firebase.storage: FirebaseStorage get() = FirebaseStorage()
-//
-///** Returns the [FirebaseStorage] instance of a given [FirebaseApp]. */
-//expect fun Firebase.storage(app: FirebaseApp): FirebaseStorage
-//
-///** Returns the [FirebaseStorage] instance of a given bucket URL (e.g. gs://my-custom-bucket). */
-//expect fun Firebase.storage(url: String): FirebaseStorage
-//
-///** Returns the [FirebaseStorage] instance of a given [FirebaseApp] and a given bucket URL (e.g. gs://my-custom-bucket). */
-//expect fun Firebase.storage(app: FirebaseApp, url: String): FirebaseStorage
-//
-//actual class FirebaseStorage(val android: com.google.firebase.storage.FirebaseStorage) {
-//
-//expect class FirebaseStorage {
-//    fun getReference(): StorageReference
-//    fun getReferenceFromUrl(fullUrl: String): StorageReference
-//}
-//
-//val ONE_MEGABYTE: Long = 1024 * 1024
-//
-//expect class StorageReference {
-//    val path: String
-//    val name: String
-//    val bucket: String
-//    fun child(pathString: String): StorageReference?
-//    val parent: StorageReference?
-//    val root: StorageReference
-//    suspend fun putBytes(bytes: ByteArray)
-////    suspend fun putStream(stream: InputStream)
-////    suspend fun putFile(uri: Uri)
-//    suspend fun getBytes(maxDownloadSizeBytes: Long = ONE_MEGABYTE): ByteArray
-//}
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.FirebaseApp
+import kotlinx.coroutines.tasks.await
+
+actual val Firebase.storage: FirebaseStorage get() = FirebaseStorage(com.google.firebase.storage.FirebaseStorage.getInstance())
+
+actual fun Firebase.storage(app: FirebaseApp): FirebaseStorage =
+    FirebaseStorage(com.google.firebase.storage.FirebaseStorage.getInstance(app.android))
+
+actual fun Firebase.storage(url: String): FirebaseStorage =
+    FirebaseStorage(com.google.firebase.storage.FirebaseStorage.getInstance(url))
+
+actual fun Firebase.storage(app: FirebaseApp, url: String): FirebaseStorage =
+    FirebaseStorage(com.google.firebase.storage.FirebaseStorage.getInstance(app.android, url))
+
+actual class FirebaseStorage(val android: com.google.firebase.storage.FirebaseStorage) {
+
+    actual fun getReference(): StorageReference = StorageReference(android.reference)
+
+    actual fun getReferenceFromUrl(fullUrl: String): StorageReference =
+        StorageReference(android.getReferenceFromUrl(fullUrl))
+}
+
+actual class StorageReference(val android: com.google.firebase.storage.StorageReference) {
+    actual val path: String get() = android.path
+    actual val name: String get() = android.name
+    actual val bucket: String get() = android.bucket
+    actual fun child(pathString: String): StorageReference =
+        StorageReference(android.child(pathString))
+
+    actual val parent: StorageReference? = android.parent?.let { StorageReference(it) }
+    actual val root: StorageReference = StorageReference(android.root)
+    actual suspend fun putBytes(bytes: ByteArray) {
+        android.putBytes(bytes).await()
+    }
+
+//    suspend fun putStream(stream: InputStream)
+//    suspend fun putFile(uri: Uri)
+    actual suspend fun getBytes(maxDownloadSizeBytes: Long) =
+        android.getBytes(maxDownloadSizeBytes).await()
+}
