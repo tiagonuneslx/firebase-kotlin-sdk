@@ -30,13 +30,13 @@ actual class StorageReference(val android: com.google.firebase.storage.StorageRe
     actual fun child(pathString: String): StorageReference =
         StorageReference(android.child(pathString))
 
-    actual val parent: StorageReference? = android.parent?.let { StorageReference(it) }
-    actual val root: StorageReference = StorageReference(android.root)
+    actual val parent: StorageReference? get() = android.parent?.let { StorageReference(it) }
+    actual val root: StorageReference get() = StorageReference(android.root)
     actual suspend fun putBytes(bytes: ByteArray) {
         android.putBytes(bytes).await()
     }
 
-//    suspend fun putStream(stream: InputStream)
+    //    suspend fun putStream(stream: InputStream)
 //    suspend fun putFile(uri: Uri)
     actual suspend fun getBytes(maxDownloadSizeBytes: Long) =
         android.getBytes(maxDownloadSizeBytes).await()
