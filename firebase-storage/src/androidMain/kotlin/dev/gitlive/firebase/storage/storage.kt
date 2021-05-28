@@ -2,7 +2,7 @@
 //import dev.gitlive.firebase.FirebaseApp
 //
 ///** Returns the [FirebaseStorage] instance of the default [FirebaseApp]. */
-//expect val Firebase.storage: FirebaseStorage
+//actual val Firebase.storage: FirebaseStorage get() = FirebaseStorage()
 //
 ///** Returns the [FirebaseStorage] instance of a given [FirebaseApp]. */
 //expect fun Firebase.storage(app: FirebaseApp): FirebaseStorage
@@ -12,6 +12,8 @@
 //
 ///** Returns the [FirebaseStorage] instance of a given [FirebaseApp] and a given bucket URL (e.g. gs://my-custom-bucket). */
 //expect fun Firebase.storage(app: FirebaseApp, url: String): FirebaseStorage
+//
+//actual class FirebaseStorage(val android: com.google.firebase.storage.FirebaseStorage) {
 //
 //expect class FirebaseStorage {
 //    fun getReference(): StorageReference

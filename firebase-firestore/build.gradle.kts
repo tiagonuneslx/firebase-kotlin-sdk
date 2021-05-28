@@ -116,7 +116,7 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                api("com.google.firebase:firebase-storage:20.0.0")
+                api("com.google.firebase:firebase-firestore:22.1.1")
             }
         }
 
