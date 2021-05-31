@@ -45,7 +45,7 @@ expect class StorageMetadata {
 
     class Builder() {
         val metadata: StorageMetadata
-        fun setContentType(contentType: String): Builder
+        var contentType: String
         fun build(): StorageMetadata
     }
 }

@@ -70,9 +70,9 @@ actual class StorageMetadata {
         actual val metadata: StorageMetadata
             get() = TODO("Not yet implemented")
 
-        actual fun setContentType(contentType: String): Builder {
-            TODO("Not yet implemented")
-        }
+        actual var contentType: String
+            get() = TODO("Not yet implemented")
+            set(value) {}
 
         actual fun build(): StorageMetadata {
             TODO("Not yet implemented")

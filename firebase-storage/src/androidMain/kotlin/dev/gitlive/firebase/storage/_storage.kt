@@ -50,7 +50,9 @@ actual class StorageReference(val android: com.google.firebase.storage.StorageRe
         android.getBytes(maxDownloadSizeBytes).await()
 }
 
-actual class File(val uri: Uri)
+actual class File(val uri: Uri) {
+    constructor(file: java.io.File) : this(Uri.fromFile(file))
+}
 
 actual class StorageMetadata(val android: com.google.firebase.storage.StorageMetadata) {
     actual var contentType: String = ""
@@ -59,10 +61,7 @@ actual class StorageMetadata(val android: com.google.firebase.storage.StorageMet
         actual val metadata: StorageMetadata =
             StorageMetadata(com.google.firebase.storage.StorageMetadata())
 
-        actual fun setContentType(contentType: String): Builder {
-            metadata.contentType = contentType
-            return this
-        }
+        actual var contentType: String by metadata::contentType
 
         actual fun build(): StorageMetadata = metadata
     }
