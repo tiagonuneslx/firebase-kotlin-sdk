@@ -1,5 +1,6 @@
 package dev.gitlive.firebase.storage
 
+import android.net.Uri
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
 import kotlinx.coroutines.tasks.await
@@ -17,7 +18,7 @@ actual fun Firebase.storage(app: FirebaseApp, url: String): FirebaseStorage =
 
 actual class FirebaseStorage(val android: com.google.firebase.storage.FirebaseStorage) {
 
-    actual fun getReference(): StorageReference = StorageReference(android.reference)
+    actual val reference: StorageReference get() = StorageReference(android.reference)
 
     actual fun getReferenceFromUrl(fullUrl: String): StorageReference =
         StorageReference(android.getReferenceFromUrl(fullUrl))
@@ -36,8 +37,33 @@ actual class StorageReference(val android: com.google.firebase.storage.StorageRe
         android.putBytes(bytes).await()
     }
 
-//    suspend fun putStream(stream: InputStream)
-//    suspend fun putFile(uri: Uri)
+    //    suspend fun putStream(stream: InputStream)
+    actual suspend fun putFile(file: File) {
+        android.putFile(file.uri)
+    }
+
+    actual suspend fun putFile(file: File, metadata: StorageMetadata) {
+        android.putFile(file.uri)
+    }
+
     actual suspend fun getBytes(maxDownloadSizeBytes: Long) =
         android.getBytes(maxDownloadSizeBytes).await()
+}
+
+actual class File(val uri: Uri)
+
+actual class StorageMetadata(val android: com.google.firebase.storage.StorageMetadata) {
+    actual var contentType: String = ""
+
+    actual class Builder {
+        actual val metadata: StorageMetadata =
+            StorageMetadata(com.google.firebase.storage.StorageMetadata())
+
+        actual fun setContentType(contentType: String): Builder {
+            metadata.contentType = contentType
+            return this
+        }
+
+        actual fun build(): StorageMetadata = metadata
+    }
 }
