@@ -16,9 +16,9 @@ actual fun Firebase.storage(url: String): FirebaseStorage = TODO("Not yet implem
 actual fun Firebase.storage(app: FirebaseApp, url: String): FirebaseStorage = TODO("Not yet implemented")
 
 actual class FirebaseStorage {
-    actual fun getReference(): StorageReference {
-        TODO("Not yet implemented")
-    }
+
+    actual val reference: StorageReference
+        get() = TODO("Not yet implemented")
 
     actual fun getReferenceFromUrl(fullUrl: String): StorageReference {
         TODO("Not yet implemented")
@@ -45,7 +45,37 @@ actual class StorageReference {
     actual suspend fun putBytes(bytes: ByteArray) {
     }
 
+    actual suspend fun putFile(file: File) {
+    }
+
+    actual suspend fun putFile(
+        file: File,
+        metadata: StorageMetadata
+    ) {
+    }
+
     actual suspend fun getBytes(maxDownloadSizeBytes: Long): ByteArray {
         TODO("Not yet implemented")
+    }
+}
+
+actual class File
+
+actual class StorageMetadata {
+    actual var contentType: String
+        get() = TODO("Not yet implemented")
+        set(value) {}
+
+    actual class Builder actual constructor() {
+        actual val metadata: StorageMetadata
+            get() = TODO("Not yet implemented")
+
+        actual var contentType: String
+            get() = TODO("Not yet implemented")
+            set(value) {}
+
+        actual fun build(): StorageMetadata {
+            TODO("Not yet implemented")
+        }
     }
 }

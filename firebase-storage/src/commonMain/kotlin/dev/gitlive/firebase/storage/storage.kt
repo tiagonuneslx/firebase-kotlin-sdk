@@ -16,7 +16,7 @@ expect fun Firebase.storage(url: String): FirebaseStorage
 expect fun Firebase.storage(app: FirebaseApp, url: String): FirebaseStorage
 
 expect class FirebaseStorage {
-    fun getReference(): StorageReference
+    val reference: StorageReference
     fun getReferenceFromUrl(fullUrl: String): StorageReference
 }
 
@@ -30,7 +30,28 @@ expect class StorageReference {
     val parent: StorageReference?
     val root: StorageReference
     suspend fun putBytes(bytes: ByteArray)
-//    suspend fun putStream(stream: InputStream)
-//    suspend fun putFile(uri: Uri)
+
+    //    suspend fun putStream(stream: InputStream)
+    suspend fun putFile(file: File)
+    suspend fun putFile(file: File, metadata: StorageMetadata)
     suspend fun getBytes(maxDownloadSizeBytes: Long = ONE_MEGABYTE): ByteArray
 }
+
+expect class File
+
+expect class StorageMetadata {
+    var contentType: String
+        private set
+
+    class Builder() {
+        val metadata: StorageMetadata
+        var contentType: String
+        fun build(): StorageMetadata
+    }
+}
+
+fun storageMetadata(init: StorageMetadata.Builder.() -> Unit): StorageMetadata =
+    StorageMetadata.Builder().run {
+        init()
+        build()
+    }
