@@ -35,6 +35,7 @@ expect class StorageReference {
     suspend fun putFile(file: File)
     suspend fun putFile(file: File, metadata: StorageMetadata)
     suspend fun getBytes(maxDownloadSizeBytes: Long = ONE_MEGABYTE): ByteArray
+    suspend fun getFile(file: File)
 }
 
 expect class File

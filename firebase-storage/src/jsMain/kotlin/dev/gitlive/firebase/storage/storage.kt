@@ -57,6 +57,9 @@ actual class StorageReference {
     actual suspend fun getBytes(maxDownloadSizeBytes: Long): ByteArray {
         TODO("Not yet implemented")
     }
+
+    actual suspend fun getFile(file: File) {
+    }
 }
 
 actual class File
