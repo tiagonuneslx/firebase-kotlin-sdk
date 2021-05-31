@@ -1,60 +1,60 @@
 package dev.gitlive.firebase.storage
 
-import cocoapods.*
+import cocoapods.FirebaseStorage.*
 
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
 
 ///** Returns the [FirebaseStorage] instance of the default [FirebaseApp]. */
 actual val Firebase.storage: FirebaseStorage
-    get() = FIRStorage.storage()
+    get() = FirebaseStorage(FIRStorage.storage())
 //
 ///** Returns the [FirebaseStorage] instance of a given [FirebaseApp]. */
-actual fun Firebase.storage(app: FirebaseApp): FirebaseStorage = FIRStorage.storageForApp(app)
+actual fun Firebase.storage(app: FirebaseApp): FirebaseStorage = FirebaseStorage(FIRStorage.storageForApp(app.ios))
 //
 ///** Returns the [FirebaseStorage] instance of a given bucket URL (e.g. gs://my-custom-bucket). */
-actual fun Firebase.storage(url: String): FirebaseStorage = FIRStorage.storageWithURL(url)
+actual fun Firebase.storage(url: String): FirebaseStorage = FirebaseStorage(FIRStorage.storageWithURL(url))
 
 //
 ///** Returns the [FirebaseStorage] instance of a given [FirebaseApp] and a given bucket URL (e.g. gs://my-custom-bucket). */
 actual fun Firebase.storage(app: FirebaseApp, url: String): FirebaseStorage
 {
     //TODO
-    return FIRStorage.storage()
+    return storage
 }
 //
 actual class FirebaseStorage(val ios: FIRStorage) {
-    fun getReference(): StorageReference = StorageReference(ios.reference)
+    actual fun getReference(): StorageReference = StorageReference(ios.reference())
 
-    fun getReferenceFromUrl(fullUrl: String): StorageReference = StorageReference(ios.StorageReference(fullUrl))
+    actual fun getReferenceFromUrl(fullUrl: String): StorageReference = StorageReference(ios.referenceForURL(fullUrl))
 }
 //
 //val ONE_MEGABYTE: Long = 1024 * 1024
 //
 actual class StorageReference(val ios:FIRStorageReference) {
-    val path: String
+    actual val path: String
         get() = ios.fullPath
 
-    val name: String
+    actual val name: String
         get() = ios.name
 
-    val bucket: String
+    actual val bucket: String
         get() = ios.bucket
 
-    fun child(pathString: String): StorageReference = StorageReference(ios.child(pathString))
+    actual fun child(pathString: String): StorageReference = StorageReference(ios.child(pathString))
 
-    val parent: StorageReference?
+    actual val parent: StorageReference?
     get() = ios.parent()?.let { StorageReference(it) }
 
-    val root: StorageReference
+    actual val root: StorageReference
     get() = StorageReference(ios.root())
 
-    suspend fun putBytes(bytes: ByteArray){
+    actual suspend fun putBytes(bytes: ByteArray){
         //TODO
     }
 //    suspend fun putStream(stream: InputStream)
 //    suspend fun putFile(uri: Uri)
-    suspend fun getBytes(maxDownloadSizeBytes: Long): ByteArray
+    actual suspend fun getBytes(maxDownloadSizeBytes: Long): ByteArray
     {
         //TODO
         return ByteArray(0)
