@@ -1,9 +1,13 @@
 package dev.gitlive.firebase.storage
 
 import android.net.Uri
+import com.google.firebase.storage.FileDownloadTask
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 actual val Firebase.storage: FirebaseStorage get() = FirebaseStorage(com.google.firebase.storage.FirebaseStorage.getInstance())
 
@@ -50,7 +54,18 @@ actual class StorageReference(val android: com.google.firebase.storage.StorageRe
         android.getBytes(maxDownloadSizeBytes).await()
 
     actual suspend fun getFile(file: File) {
-        android.getFile(file.uri)
+        suspendCancellableCoroutine<FileDownloadTask.TaskSnapshot> { continuation ->
+            android.getFile(file.uri)
+                .addOnSuccessListener { snapshot ->
+                    continuation.resume(snapshot)
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resumeWithException(exception)
+                }
+                .addOnCanceledListener {
+                    continuation.cancel()
+                }
+        }
     }
 }
 
