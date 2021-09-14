@@ -5,14 +5,14 @@ version = project.property("firebase-storage.version") as String
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.5.10"
+    kotlin("plugin.serialization") version "1.5.30"
 }
 
 android {
-    compileSdkVersion(property("targetSdkVersion") as Int)
+    compileSdk = property("targetSdkVersion") as Int
     defaultConfig {
-        minSdkVersion(property("minSdkVersion") as Int)
-        targetSdkVersion(property("targetSdkVersion") as Int)
+        minSdk = property("minSdkVersion") as Int
+        targetSdk = property("targetSdkVersion") as Int
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
     }
@@ -20,7 +20,7 @@ android {
         getByName("main") {
             manifest.srcFile("src/androidMain/AndroidManifest.xml")
         }
-        getByName("androidTest"){
+        getByName("androidTest") {
             java.srcDir(file("src/androidAndroidTest/kotlin"))
             manifest.srcFile("src/androidAndroidTest/AndroidManifest.xml")
         }
@@ -31,12 +31,12 @@ android {
         }
     }
     packagingOptions {
-        pickFirst("META-INF/kotlinx-serialization-core.kotlin_module")
-        pickFirst("META-INF/AL2.0")
-        pickFirst("META-INF/LGPL2.1")
-        pickFirst("androidsupportmultidexversion.txt")
+        resources.pickFirsts.add("META-INF/kotlinx-serialization-core.kotlin_module")
+        resources.pickFirsts.add("META-INF/AL2.0")
+        resources.pickFirsts.add("META-INF/LGPL2.1")
+        resources.pickFirsts.add("androidsupportmultidexversion.txt")
     }
-    lintOptions {
+    lint {
         isAbortOnError = false
     }
 }
@@ -49,8 +49,33 @@ kotlin {
 
     fun nativeTargetConfig(): KotlinNativeTarget.() -> Unit = {
         val nativeFrameworkPaths = listOf(
-            rootProject.project("firebase-app").projectDir.resolve("src/nativeInterop/cinterop/Carthage/Build/iOS"),
-            projectDir.resolve("src/nativeInterop/cinterop/Carthage/Build/iOS")
+            rootProject.project("firebase-app").projectDir.resolve("src/nativeInterop/cinterop/Carthage/Build/iOS")
+        ).plus(
+            listOf(
+                "FirebaseAnalytics",
+                "FirebaseCore",
+                "FirebaseCoreDiagnostics",
+                "FirebaseInstallations",
+                "GoogleAppMeasurement",
+                "GoogleDataTransport",
+                "GoogleUtilities",
+                "nanopb",
+                "PromisesObjC"
+            ).map {
+                val archVariant =
+                    if (konanTarget is org.jetbrains.kotlin.konan.target.KonanTarget.IOS_X64) "ios-arm64_i386_x86_64-simulator" else "ios-arm64_armv7"
+
+                rootProject.project("firebase-app").projectDir.resolve("src/nativeInterop/cinterop/Carthage/Build/$it.xcframework/$archVariant")
+            }
+        ).plus(
+            listOf(
+                "FirebaseStorage",
+            ).map {
+                val archVariant =
+                    if (konanTarget is org.jetbrains.kotlin.konan.target.KonanTarget.IOS_X64) "ios-arm64_i386_x86_64-simulator" else "ios-arm64_armv7"
+
+                projectDir.resolve("src/nativeInterop/cinterop/Carthage/Build/$it.xcframework/$archVariant")
+            }
         )
 
         binaries {
@@ -98,8 +123,8 @@ kotlin {
                 apiVersion = "1.5"
                 languageVersion = "1.5"
                 progressiveMode = true
-                useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
-                useExperimentalAnnotation("kotlinx.serialization.InternalSerializationApi")
+                optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+                optIn("kotlinx.serialization.InternalSerializationApi")
             }
         }
 
@@ -112,7 +137,7 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                api("com.google.firebase:firebase-storage:20.0.0")
+                api("com.google.firebase:firebase-storage-ktx")
             }
         }
 
