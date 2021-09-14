@@ -43,11 +43,19 @@ actual class StorageReference(val android: com.google.firebase.storage.StorageRe
 
     //    suspend fun putStream(stream: InputStream)
     actual suspend fun putFile(file: File) {
-        android.putFile(file.uri)
+        suspendCancellableCoroutine<Unit> { continuation ->
+            android.putFile(file.uri).addOnCompleteListener {
+                continuation.resume(Unit)
+            }
+        }
     }
 
     actual suspend fun putFile(file: File, metadata: StorageMetadata) {
-        android.putFile(file.uri, metadata.android)
+        suspendCancellableCoroutine<Unit> { continuation ->
+            android.putFile(file.uri, metadata.android).addOnCompleteListener {
+                continuation.resume(Unit)
+            }
+        }
     }
 
     actual suspend fun getBytes(maxDownloadSizeBytes: Long) =
