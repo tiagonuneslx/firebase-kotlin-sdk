@@ -6,7 +6,7 @@ plugins {
 android {
     compileSdk = 31
     defaultConfig {
-        applicationId = "dev.gitlive.firebase.sample.android"
+        applicationId = "dev.gitlive.firebase.sample"
         minSdk = 21
         targetSdk = 31
         versionCode = 1
